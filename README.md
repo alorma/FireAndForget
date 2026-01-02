@@ -148,7 +148,7 @@ For temporary state that doesn't need to persist:
 class InMemoryRunner : FireAndForgetRunner() {
   private val map = mutableMapOf<String, Boolean>()
 
-  override fun isEnabled(fireAndForget: FireAndForget): Boolean {
+  override fun checkEnabled(fireAndForget: FireAndForget): Boolean {
     return map[fireAndForget.name] ?: fireAndForget.defaultValue
   }
 
@@ -170,7 +170,7 @@ Implement `FireAndForgetRunner` with your preferred storage solution (Room, Data
 class DataStoreRunner(
   private val dataStore: DataStore<Preferences>
 ) : FireAndForgetRunner() {
-  override fun isEnabled(fireAndForget: FireAndForget): Boolean {
+  override fun checkEnabled(fireAndForget: FireAndForget): Boolean {
     // Your DataStore implementation
   }
 
@@ -213,6 +213,7 @@ abstract class FireAndForget(
   val fireAndForgetRunner: FireAndForgetRunner,
   val name: String,
   val defaultValue: Boolean = true,
+  val autoDisable: Boolean = false,
 )
 ```
 
@@ -221,6 +222,7 @@ abstract class FireAndForget(
 - `fireAndForgetRunner`: The runner implementation that handles state persistence
 - `name`: Unique identifier for this flag (used as storage key)
 - `defaultValue`: Initial state (default: `true` = enabled)
+- `autoDisable`: When `true`, automatically disables the flag on first call to `isEnabled()` (default: `false`)
 
 #### Methods
 
@@ -232,11 +234,14 @@ abstract class FireAndForget(
 
 ```kotlin
 abstract class FireAndForgetRunner {
-  abstract fun isEnabled(fireAndForget: FireAndForget): Boolean
+  fun isEnabled(fireAndForget: FireAndForget): Boolean
+  protected abstract fun checkEnabled(fireAndForget: FireAndForget): Boolean
   abstract fun disable(fireAndForget: FireAndForget)
   abstract fun reset(fireAndForget: FireAndForget)
 }
 ```
+
+**Implementation Note**: When creating a custom runner, you must override `checkEnabled()` instead of `isEnabled()`. The `isEnabled()` method is final and handles the `autoDisable` logic internally, ensuring it cannot be bypassed by runner implementations.
 
 ## Usage Examples
 
@@ -337,6 +342,34 @@ fun initializeApp() {
   }
 }
 ```
+
+### Auto-Disable Feature
+
+Use `autoDisable = true` to automatically disable the flag on first access without manually calling `disable()`:
+
+```kotlin
+class QuickTip(runner: FireAndForgetRunner) : FireAndForget(
+  fireAndForgetRunner = runner,
+  name = "quick_tip",
+  autoDisable = true  // Automatically disables after first isEnabled() call
+)
+
+fun showScreen() {
+  val runner = SettingsFireAndForgetRunner(Settings())
+  val quickTip = QuickTip(runner)
+
+  // First call: returns true and automatically disables
+  if (quickTip.isEnabled()) {
+    showTooltip("Here's a quick tip!")
+    // No need to call quickTip.disable()
+  }
+
+  // Subsequent calls: returns false
+  quickTip.isEnabled() // false
+}
+```
+
+This is perfect for fire-and-forget operations where you don't have a natural completion callback to call `disable()`. The flag automatically marks itself as executed when accessed for the first time.
 
 ## Project Structure
 

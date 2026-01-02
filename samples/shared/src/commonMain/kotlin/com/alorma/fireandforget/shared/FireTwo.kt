@@ -8,4 +8,5 @@ class FireTwo(
 ) : FireAndForget(
   fireAndForgetRunner = fireAndForgetRunner,
   name = "fire_two",
+  autoDisable = true, // Automatically disables on first access
 )

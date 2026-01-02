@@ -20,6 +20,7 @@ class FireAndForgetLibraryConventionPlugin : Plugin<Project> {
         apply("org.jetbrains.kotlin.multiplatform")
         apply("com.android.kotlin.multiplatform.library")
         apply("com.vanniktech.maven.publish")
+        apply("signing")
       }
 
       val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")

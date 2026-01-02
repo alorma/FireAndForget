@@ -9,7 +9,7 @@ class SettingsFireAndForgetRunner(
   val settings: Settings,
 ) : FireAndForgetRunner() {
 
-  override fun isEnabled(fireAndForget: FireAndForget): Boolean {
+  override fun checkEnabled(fireAndForget: FireAndForget): Boolean {
     return settings.getBoolean(
       key = buildKey(fireAndForget = fireAndForget),
       defaultValue = fireAndForget.defaultValue,

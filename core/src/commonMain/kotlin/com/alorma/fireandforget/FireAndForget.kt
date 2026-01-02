@@ -1,20 +1,14 @@
 package com.alorma.fireandforget
 
-abstract class FireAndForget(
+open class FireAndForget(
   val fireAndForgetRunner: FireAndForgetRunner,
   val name: String,
   val defaultValue: Boolean = true,
   val autoDisable: Boolean = false,
 ) {
-  fun isEnabled(): Boolean {
-    val enabled = fireAndForgetRunner.isEnabled(this)
-    if (enabled && autoDisable) {
-      fireAndForgetRunner.disable(this)
-    }
-    return enabled
-  }
+  open fun isEnabled() = fireAndForgetRunner.isEnabled(this)
 
-  fun disable() = fireAndForgetRunner.disable(this)
+  open fun disable() = fireAndForgetRunner.disable(this)
 
-  fun reset() = fireAndForgetRunner.reset(this)
+  open fun reset() = fireAndForgetRunner.reset(this)
 }

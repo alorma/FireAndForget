@@ -28,7 +28,8 @@ class FireAndForgetLibraryConventionPlugin : Plugin<Project> {
       val defaultNamespace = libs.findVersion("namespace").get().toString()
 
       // Set Maven group ID for publishing
-      group = defaultNamespace
+      group = findProperty("libGroup")?.toString() ?: "com.github.alorma.fire-and-forget"
+      version = findProperty("libVersion")?.toString() ?: "0.0.1"
 
       // Configure Maven Publishing
       extensions.configure<MavenPublishBaseExtension> {

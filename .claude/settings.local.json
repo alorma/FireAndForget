@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew :samples:androidApp:assembleDebug)",
+      "Bash(./gradlew :samples:desktopApp:build)"
+    ]
+  }
+}

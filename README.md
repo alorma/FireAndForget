@@ -9,6 +9,8 @@
 
 [![Build](https://github.com/alorma/FireAndForget/actions/workflows/main.yml/badge.svg)](https://github.com/alorma/FireAndForget/actions/workflows/main.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/com.alorma.fireandforget/core.svg)](https://central.sonatype.com/namespace/com.alorma.fireandforget)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.3.0-blue.svg?logo=kotlin)
 
 <a href="https://www.buymeacoffee.com/alorma" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
@@ -92,7 +94,7 @@ class OnboardingFlag(
 
 #### Option A: Use the multiplatform-settings Runner (Recommended)
 
-The library provides a ready-to-use implementation using [multiplatform-settings](https://github.com/russhwolf/multiplatform-settings):
+The library provides a ready-to-use implementation using [russhwolf/multiplatform-settings](https://github.com/russhwolf/multiplatform-settings):
 
 ```kotlin
 import com.alorma.fireandforget.mukltiplatform.settings.SettingsFireAndForgetRunner

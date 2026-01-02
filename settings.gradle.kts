@@ -19,6 +19,7 @@ dependencyResolutionManagement {
 }
 
 include(":core")
+include(":multiplatform-settings")
 include(":samples:shared")
 include(":samples:androidApp")
 include(":samples:desktopApp")

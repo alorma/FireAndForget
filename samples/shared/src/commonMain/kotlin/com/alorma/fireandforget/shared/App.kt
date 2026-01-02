@@ -14,11 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.alorma.fireandforget.FireAndForget
+import com.alorma.fireandforget.mukltiplatform.settings.SettingsFireAndForgetRunner
+import com.russhwolf.settings.Settings
 
 @Composable
 fun App() {
   MaterialTheme {
-    val runner = InMemoryFireAndForgetRunner()
+    val settings = Settings()
+    val runner = SettingsFireAndForgetRunner(settings)
 
     val fireOne = FireOne(runner)
     val fireTwo = FireTwo(runner)

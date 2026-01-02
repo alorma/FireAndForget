@@ -18,6 +18,11 @@ kotlin {
   sourceSets {
     commonMain.dependencies {
       implementation(projects.core)
+      implementation(projects.multiplatformSettings)
+
+      implementation(libs.multiplatform.settings)
+      implementation(libs.multiplatform.settings.no.arg)
+
       implementation(compose.runtime)
       implementation(compose.foundation)
       implementation(compose.material3)

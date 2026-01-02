@@ -1,8 +1,10 @@
 import com.android.build.api.dsl.androidLibrary
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.api.publish.maven.MavenPom
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.getByType
@@ -17,11 +19,20 @@ class FireAndForgetLibraryConventionPlugin : Plugin<Project> {
       with(pluginManager) {
         apply("org.jetbrains.kotlin.multiplatform")
         apply("com.android.kotlin.multiplatform.library")
+        apply("com.vanniktech.maven.publish")
       }
 
       val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
       val defaultNamespace = libs.findVersion("namespace").get().toString()
+
+      // Configure Maven Publishing
+      extensions.configure<MavenPublishBaseExtension> {
+        publishToMavenCentral(validateDeployment = false)
+        signAllPublications()
+
+        pom { configurePom(this) }
+      }
 
       extensions.configure<KotlinMultiplatformExtension> {
         applyDefaultHierarchyTemplate()
@@ -94,6 +105,35 @@ class FireAndForgetLibraryConventionPlugin : Plugin<Project> {
             }
           }
         }
+      }
+    }
+  }
+
+  private fun configurePom(pom: MavenPom) {
+    pom.apply {
+      name.set("FireAndForget")
+      description.set("A lightweight Kotlin Multiplatform library for Compose Multiplatform that executes code once on first access, with optional auto-toggling behavior")
+      url.set("https://github.com/alorma/FireAndForget")
+
+      licenses {
+        license {
+          name.set("MIT License")
+          url.set("https://github.com/alorma/FireAndForget/blob/main/LICENSE")
+        }
+      }
+
+      developers {
+        developer {
+          id.set("alorma")
+          name.set("Bernat Borrás")
+          email.set("bernatbor15@gmail.com")
+        }
+      }
+
+      scm {
+        connection.set("scm:git:github.com/alorma/FireAndForget.git")
+        developerConnection.set("scm:git:ssh://github.com/alorma/FireAndForget.git")
+        url.set("https://github.com/alorma/FireAndForget/tree/main")
       }
     }
   }

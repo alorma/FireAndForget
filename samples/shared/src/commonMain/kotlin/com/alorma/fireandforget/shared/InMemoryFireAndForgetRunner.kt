@@ -8,7 +8,11 @@ class InMemoryFireAndForgetRunner: FireAndForgetRunner() {
   val map: MutableMap<String, Boolean> = mutableMapOf()
 
   override fun isEnabled(fireAndForget: FireAndForget): Boolean {
-    return map[fireAndForget.name] ?: false
+    return map[fireAndForget.name] ?: fireAndForget.defaultValue
+  }
+
+  override fun disable(fireAndForget: FireAndForget) {
+    map[fireAndForget.name] = false
   }
 
   override fun reset(fireAndForget: FireAndForget) {

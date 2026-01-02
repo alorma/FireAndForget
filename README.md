@@ -32,7 +32,6 @@ FireAndForget is a simple yet powerful utility for managing one-time operations 
 - 🔄 **Flexible State Management**: Choose your own persistence strategy (in-memory, shared preferences, data store, etc.)
 - 🎯 **Simple API**: Three intuitive methods for complete control
 - 🌐 **True Multiplatform**: Works on Android (API 21+), iOS, Web (JS & WASM), Desktop (JVM)
-- 🧩 **Compose-Friendly**: Designed for seamless integration with Compose Multiplatform
 - 🏃 **Runner Pattern**: Delegates state persistence to customizable runner implementations
 
 ## Installation
@@ -155,23 +154,22 @@ class DataStoreRunner(
 }
 ```
 
-### Step 3: Use in Your Compose Code
+### Step 3: Use in Your Code
 
 ```kotlin
-@Composable
-fun App() {
+fun showAppContent() {
   val runner = SettingsFireAndForgetRunner(Settings())
   val onboarding = OnboardingFlag(runner)
 
   if (onboarding.isEnabled()) {
     // This will only show once
-    OnboardingScreen(
+    showOnboardingScreen(
       onComplete = {
         onboarding.disable() // Mark as completed
       }
     )
   } else {
-    MainScreen()
+    showMainScreen()
   }
 }
 ```
@@ -220,13 +218,12 @@ class WelcomeMessage(runner: FireAndForgetRunner) : FireAndForget(
   name = "welcome_message"
 )
 
-@Composable
-fun HomeScreen() {
+fun showHomeScreen() {
   val runner = SettingsFireAndForgetRunner(Settings())
-  val welcomeFlag = remember { WelcomeMessage(runner) }
+  val welcomeFlag = WelcomeMessage(runner)
 
   if (welcomeFlag.isEnabled()) {
-    WelcomeDialog(
+    showWelcomeDialog(
       onDismiss = { welcomeFlag.disable() }
     )
   }
@@ -241,17 +238,14 @@ class NewFeatureAnnouncement(runner: FireAndForgetRunner) : FireAndForget(
   name = "feature_announcement_v2"
 )
 
-@Composable
-fun MainScreen() {
+fun showMainScreen() {
   val runner = SettingsFireAndForgetRunner(Settings())
-  val announcement = remember { NewFeatureAnnouncement(runner) }
+  val announcement = NewFeatureAnnouncement(runner)
 
-  LaunchedEffect(Unit) {
-    if (announcement.isEnabled()) {
-      // Show announcement
-      showSnackbar("Check out our new feature!")
-      announcement.disable()
-    }
+  if (announcement.isEnabled()) {
+    // Show announcement
+    displayMessage("Check out our new feature!")
+    announcement.disable()
   }
 }
 ```
@@ -264,45 +258,36 @@ class AppTutorial(runner: FireAndForgetRunner) : FireAndForget(
   name = "app_tutorial"
 )
 
-@Composable
-fun SettingsScreen() {
+fun handleRestartTutorial() {
   val runner = SettingsFireAndForgetRunner(Settings())
-  val tutorial = remember { AppTutorial(runner) }
+  val tutorial = AppTutorial(runner)
 
-  Button(
-    onClick = {
-      tutorial.reset() // Allow tutorial to run again
-      navigateToTutorial()
-    }
-  ) {
-    Text("Restart Tutorial")
-  }
+  // Allow tutorial to run again
+  tutorial.reset()
+  navigateToTutorial()
 }
 ```
 
 ### Multiple Flags with Shared Runner
 
 ```kotlin
-@Composable
-fun App() {
-  val runner = remember { SettingsFireAndForgetRunner(Settings()) }
+fun showApp() {
+  val runner = SettingsFireAndForgetRunner(Settings())
 
   // Multiple flags can share the same runner
-  val onboarding = remember { OnboardingFlag(runner) }
-  val tutorial = remember { TutorialFlag(runner) }
-  val featureAnnouncement = remember { FeatureAnnouncementFlag(runner) }
+  val onboarding = OnboardingFlag(runner)
+  val tutorial = TutorialFlag(runner)
+  val featureAnnouncement = FeatureAnnouncementFlag(runner)
 
   when {
-    onboarding.isEnabled() -> OnboardingScreen { onboarding.disable() }
-    tutorial.isEnabled() -> TutorialScreen { tutorial.disable() }
-    else -> MainScreen()
+    onboarding.isEnabled() -> showOnboardingScreen { onboarding.disable() }
+    tutorial.isEnabled() -> showTutorialScreen { tutorial.disable() }
+    else -> showMainScreen()
   }
 }
 ```
 
-### Non-Compose Usage
-
-FireAndForget works outside of Compose too:
+### First-Run Setup
 
 ```kotlin
 class FirstRunSetup(runner: FireAndForgetRunner) : FireAndForget(
@@ -329,7 +314,7 @@ This repository contains:
 
 - **core** - The main FireAndForget library implementation
 - **multiplatform-settings** - A ready-to-use runner implementation using multiplatform-settings
-- **samples/shared** - Shared Compose UI code demonstrating library usage
+- **samples/shared** - Shared UI code demonstrating library usage
 - **samples/androidApp** - Android sample application
 - **samples/desktopApp** - Desktop (JVM) sample application
 - **build-logic** - Gradle convention plugins for build configuration
@@ -377,7 +362,6 @@ This repository contains:
 - **Android**: API 21+ (Android 5.0 Lollipop)
 - **iOS**: 13.0+
 - **JVM**: 17+
-- **Compose Multiplatform**: 1.9.3+
 
 ## Contributing
 
@@ -390,5 +374,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Learn More
 
 - [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)
-- [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform)
 - [multiplatform-settings](https://github.com/russhwolf/multiplatform-settings)

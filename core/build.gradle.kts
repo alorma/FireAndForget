@@ -1,38 +1,11 @@
 import com.android.build.api.dsl.androidLibrary
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-  alias(libs.plugins.kotlinMultiplatform)
-  alias(libs.plugins.kotlinMultiplatformAndroidLibrary)
+  id("fireAndForget.library")
 }
 
 kotlin {
-  applyDefaultHierarchyTemplate()
-  withSourcesJar()
-
   androidLibrary {
-    namespace = libs.versions.namespace.get()
-    minSdk = libs.versions.android.minSdk.get().toInt()
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-
-    compilerOptions {
-      jvmTarget.set(JvmTarget.JVM_11)
-    }
-  }
-
-  iosX64()
-  iosArm64()
-  iosSimulatorArm64()
-
-  jvm()
-
-  js(IR) {
-    browser()
-  }
-
-  @OptIn(ExperimentalWasmDsl::class)
-  wasmJs {
-    browser()
+    namespace = libs.versions.namespace.get() + ".core"
   }
 }

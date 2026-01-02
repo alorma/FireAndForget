@@ -8,7 +8,7 @@
 </div>
 
 [![Build](https://github.com/alorma/FireAndForget/actions/workflows/main.yml/badge.svg)](https://github.com/alorma/FireAndForget/actions/workflows/main.yml)
-[![Maven Central](https://img.shields.io/maven-central/v/com.alorma.fireandforget/core.svg)](https://central.sonatype.com/namespace/com.alorma.fireandforget)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.alorma.fire-and-forget/core.svg)](https://central.sonatype.com/namespace/com.github.alorma.fire-and-forget)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.3.0-blue.svg?logo=kotlin)
 

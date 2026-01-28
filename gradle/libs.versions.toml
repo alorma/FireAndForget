@@ -19,6 +19,7 @@ kotlin = "2.3.0"
 
 # Compose Multiplatform
 composeMultiplatform = "1.10.0"
+composeMultiplatformMaterial3 = "1.9.0"
 
 # AndroidX
 androidx-activity = "1.12.2"
@@ -44,7 +45,7 @@ multiplatform-settings-no-arg = { group = "com.russhwolf", name = "multiplatform
 compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "composeMultiplatform" }
 compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "composeMultiplatform" }
 compose-ui-tooling-preview = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "composeMultiplatform" }
-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMultiplatform" }
+compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "composeMultiplatformMaterial3" }
 compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "composeMultiplatform" }
 compose-foundation = { group = "org.jetbrains.compose.foundation", name = "foundation", version.ref = "composeMultiplatform" }
 

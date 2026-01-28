@@ -12,7 +12,7 @@ android-compileSdk = "36"
 android-targetSdk = "36"
 
 # Publishing
-mavenPlugin = "0.35.0"
+mavenPlugin = "0.36.0"
 
 # Kotlin
 kotlin = "2.3.0"

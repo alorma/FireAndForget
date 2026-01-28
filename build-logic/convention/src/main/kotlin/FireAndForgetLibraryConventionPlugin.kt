@@ -1,4 +1,4 @@
-import com.android.build.api.dsl.androidLibrary
+import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryExtension
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
@@ -8,6 +8,7 @@ import org.gradle.api.publish.maven.MavenPom
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.getByType
+import org.jetbrains.compose.reload.gradle.forAllJvmTargets
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -43,7 +44,7 @@ class FireAndForgetLibraryConventionPlugin : Plugin<Project> {
         applyDefaultHierarchyTemplate()
         withSourcesJar()
 
-        androidLibrary {
+        extensions.configure<KotlinMultiplatformAndroidLibraryExtension> {
           // Default namespace - modules MUST override this with their unique namespace
           namespace = defaultNamespace
 
@@ -59,14 +60,6 @@ class FireAndForgetLibraryConventionPlugin : Plugin<Project> {
           lint {
             checkReleaseBuilds = false
             abortOnError = false
-          }
-
-          compilations.configureEach {
-            compileTaskProvider.configure {
-              compilerOptions {
-                jvmTarget.set(JvmTarget.JVM_17)
-              }
-            }
           }
         }
 
@@ -88,9 +81,8 @@ class FireAndForgetLibraryConventionPlugin : Plugin<Project> {
 
       // Validate that module has overridden the namespace
       afterEvaluate {
-        extensions.findByType<KotlinMultiplatformExtension>()?.let { kotlin ->
-          kotlin.androidLibrary {
-            val currentNamespace = namespace
+        extensions.findByType<KotlinMultiplatformAndroidLibraryExtension>()?.let { kotlin ->
+            val currentNamespace = kotlin.namespace
             if (currentNamespace == defaultNamespace) {
               throw GradleException(
                 """
@@ -107,7 +99,6 @@ class FireAndForgetLibraryConventionPlugin : Plugin<Project> {
                 |Current namespace: $currentNamespace (this is the default and will cause conflicts)
                 """.trimMargin()
               )
-            }
           }
         }
       }

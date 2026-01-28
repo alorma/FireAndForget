@@ -1,5 +1,3 @@
-import com.android.build.api.dsl.androidLibrary
-
 plugins {
   id("fireAndForget.library")
 }

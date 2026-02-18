@@ -14,7 +14,7 @@
 
 <a href="https://www.buymeacoffee.com/alorma" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
-A lightweight Kotlin Multiplatform library that helps you execute code once on first access, with flexible state persistence options. Use it in your Kotlin Multiplatform projects or natively in Android, iOS, JVM, or JavaScript applications.
+A lightweight Kotlin Multiplatform library that helps you execute code once on first access, with flexible state persistence options. Use it in your Kotlin Multiplatform projects or natively in Android, iOS, JVM, or JavaScript applications. Now includes `CounterFireAndForget` for executing code a fixed number of times!
 
 ## Overview
 
@@ -22,6 +22,7 @@ FireAndForget is a simple yet powerful utility for managing one-time operations 
 
 - 🎓 First-time user onboarding flows
 - 📢 One-time feature announcements
+- 🔢 Limited-time feature announcements (show N times with `CounterFireAndForget`)
 - ⚙️ Initial setup operations
 - 📚 Tutorial or walkthrough displays
 - 🚀 Feature flag management with automatic reset
@@ -29,6 +30,7 @@ FireAndForget is a simple yet powerful utility for managing one-time operations 
 ## Features
 
 - ✅ **Execute Once**: Code runs only on first access
+- 🔢 **Counter-Based Execution**: Execute code N times before disabling with `CounterFireAndForget`
 - 🔄 **Flexible State Management**: Choose your own persistence strategy (in-memory, shared preferences, data store, etc.)
 - 🎯 **Simple API**: Three intuitive methods for complete control
 - 🌐 **True Multiplatform**: Works on Android (API 21+), iOS, Web (JS & WASM), Desktop (JVM)
@@ -95,11 +97,22 @@ FireAndForget uses a **Runner Pattern** that separates the flag logic from state
    - Requires a `FireAndForgetRunner` implementation for state persistence
    - Each instance needs a unique `name` to identify its state
 
-2. **FireAndForgetRunner** (Abstract Class)
+2. **CounterFireAndForget** (Abstract Class, extends FireAndForget)
+   - Executes code a fixed number of times before disabling
+   - Accepts a `counter` parameter for the number of allowed executions
+   - Counter decrements on each `isEnabled()` call
+   - Perfect for limited-time features or trial functionality
+
+3. **FireAndForgetRunner** (Abstract Class)
    - Defines the persistence contract with three methods:
      - `isEnabled()`: Check if the flag should execute
      - `disable()`: Mark the flag as executed
      - `reset()`: Reset the flag to allow re-execution
+   - Also provides counter methods for `CounterFireAndForget`:
+     - `isEnabledCounter()`: Check and decrement counter
+     - `getCounter()`: Retrieve current counter value
+     - `setCounter()`: Store counter value
+     - `resetCounter()`: Reset counter to initial value
 
 This pattern allows you to choose or create your own state persistence strategy.
 
@@ -147,6 +160,7 @@ For temporary state that doesn't need to persist:
 ```kotlin
 class InMemoryRunner : FireAndForgetRunner() {
   private val map = mutableMapOf<String, Boolean>()
+  private val counterMap = mutableMapOf<String, Int>()
 
   override fun checkEnabled(fireAndForget: FireAndForget): Boolean {
     return map[fireAndForget.name] ?: fireAndForget.defaultValue
@@ -158,6 +172,14 @@ class InMemoryRunner : FireAndForgetRunner() {
 
   override fun reset(fireAndForget: FireAndForget) {
     map.remove(fireAndForget.name)
+  }
+
+  override fun getCounter(counterFireAndForget: CounterFireAndForget): Int? {
+    return counterMap[counterFireAndForget.name]
+  }
+
+  override fun setCounter(counterFireAndForget: CounterFireAndForget, value: Int) {
+    counterMap[counterFireAndForget.name] = value
   }
 }
 ```
@@ -180,6 +202,14 @@ class DataStoreRunner(
 
   override fun reset(fireAndForget: FireAndForget) {
     // Your DataStore implementation
+  }
+
+  override fun getCounter(counterFireAndForget: CounterFireAndForget): Int? {
+    // Your DataStore implementation for counter
+  }
+
+  override fun setCounter(counterFireAndForget: CounterFireAndForget, value: Int) {
+    // Your DataStore implementation for counter
   }
 }
 ```
@@ -230,6 +260,38 @@ abstract class FireAndForget(
 - `disable()` - Marks the flag as executed (disables it)
 - `reset()` - Resets the flag back to `defaultValue` (allows re-execution)
 
+### CounterFireAndForget Class
+
+```kotlin
+abstract class CounterFireAndForget(
+  fireAndForgetRunner: FireAndForgetRunner,
+  name: String,
+  val counter: Int,
+) : FireAndForget(...)
+```
+
+#### Constructor Parameters
+
+- `fireAndForgetRunner`: The runner implementation that handles state persistence
+- `name`: Unique identifier for this flag (used as storage key)
+- `counter`: Number of times `isEnabled()` will return `true` before returning `false`
+
+#### Methods
+
+- `isEnabled(): Boolean` - Returns `true` if counter > 0, decrements counter on each call
+- `reset()` - Resets the counter back to initial value
+
+#### Behavior
+
+```kotlin
+val feature = CounterFireAndForget(runner, "feature", counter = 3)
+feature.isEnabled() // Call 1: true (counter: 3 → 2)
+feature.isEnabled() // Call 2: true (counter: 2 → 1)
+feature.isEnabled() // Call 3: true (counter: 1 → 0)
+feature.isEnabled() // Call 4+: false (counter: 0)
+feature.reset()     // Resets counter to 3
+```
+
 ### FireAndForgetRunner Abstract Class
 
 ```kotlin
@@ -238,10 +300,16 @@ abstract class FireAndForgetRunner {
   protected abstract fun checkEnabled(fireAndForget: FireAndForget): Boolean
   abstract fun disable(fireAndForget: FireAndForget)
   abstract fun reset(fireAndForget: FireAndForget)
+  
+  // Counter support for CounterFireAndForget
+  fun isEnabledCounter(counterFireAndForget: CounterFireAndForget): Boolean
+  protected abstract fun getCounter(counterFireAndForget: CounterFireAndForget): Int?
+  protected abstract fun setCounter(counterFireAndForget: CounterFireAndForget, value: Int)
+  fun resetCounter(counterFireAndForget: CounterFireAndForget)
 }
 ```
 
-**Implementation Note**: When creating a custom runner, you must override `checkEnabled()` instead of `isEnabled()`. The `isEnabled()` method is final and handles the `autoDisable` logic internally, ensuring it cannot be bypassed by runner implementations.
+**Implementation Note**: When creating a custom runner, you must override `checkEnabled()` instead of `isEnabled()`. The `isEnabled()` method is final and handles the `autoDisable` logic internally, ensuring it cannot be bypassed by runner implementations. You must also implement `getCounter()` and `setCounter()` to support `CounterFireAndForget`.
 
 ## Usage Examples
 
@@ -370,6 +438,47 @@ fun showScreen() {
 ```
 
 This is perfect for fire-and-forget operations where you don't have a natural completion callback to call `disable()`. The flag automatically marks itself as executed when accessed for the first time.
+
+### Counter-Based Execution (Execute N Times)
+
+Use `CounterFireAndForget` to execute code a specific number of times before disabling:
+
+```kotlin
+import com.alorma.fireandforget.CounterFireAndForget
+
+class LimitedPromo(runner: FireAndForgetRunner, times: Int = 3) : CounterFireAndForget(
+  fireAndForgetRunner = runner,
+  name = "limited_promo",
+  counter = times  // Will return true 3 times, then false
+)
+
+fun showScreen() {
+  val runner = SettingsFireAndForgetRunner(Settings())
+  val promo = LimitedPromo(runner, times = 3)
+
+  // First 3 calls: returns true and decrements counter
+  if (promo.isEnabled()) {
+    showPromoBanner("Special offer!")
+  }
+
+  // After 3 calls: returns false
+  // Counter state persists across app restarts
+}
+```
+
+#### How Counter Works
+
+- Counter decrements on each `isEnabled()` call
+- Returns `true` while counter > 0
+- Returns `false` when counter reaches 0
+- Calling `reset()` restores counter to initial value
+- Counter persists across app restarts (with persistent runners)
+
+**Perfect for:**
+- 🎯 Limited feature announcements (show N times)
+- 📚 Tutorial hints for first N uses
+- 🎁 Trial features with usage limits
+- 🔔 Reminder messages (show N times before stopping)
 
 ## Project Structure
 

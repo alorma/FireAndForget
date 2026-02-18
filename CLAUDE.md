@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-FireAndForget is a lightweight Kotlin Multiplatform library for Compose Multiplatform that executes code once on first access, with optional auto-toggling behavior. The library is designed for scenarios like first-time user onboarding, one-time feature announcements, and tutorial displays.
+FireAndForget is a lightweight Kotlin Multiplatform library for Compose Multiplatform that executes code once on first access, with optional auto-toggling behavior. The library is designed for scenarios like first-time user onboarding, one-time feature announcements, and tutorial displays. It now includes `CounterFireAndForget` for executing code a fixed number of times.
 
 ## Module Structure
 
 This is a multi-module Kotlin Multiplatform project organized as follows:
 
-- **core** - The main FireAndForget library implementation. Contains the core `FireAndForget` abstract class and `FireAndForgetRunner` interface.
+- **core** - The main FireAndForget library implementation. Contains the core `FireAndForget` abstract class, `CounterFireAndForget` class, and `FireAndForgetRunner` interface.
 - **multiplatform-settings** - A `FireAndForgetRunner` implementation using the `multiplatform-settings` library for persistence across platforms.
 - **samples/shared** - Shared Compose UI code for sample applications.
 - **samples/androidApp** - Android sample application.
@@ -89,22 +89,31 @@ The library follows a **Runner pattern** where:
    - `name`: A unique identifier for this flag
    - `defaultValue`: Initial state (default: true means enabled)
 
-2. **FireAndForgetRunner** (core/src/commonMain/kotlin/com/alorma/fireandforget/FireAndForgetRunner.kt:3) - Abstract class defining the persistence contract:
+2. **CounterFireAndForget** (core/src/commonMain/kotlin/com/alorma/fireandforget/CounterFireAndForget.kt:3) - Abstract class extending `FireAndForget` that executes a fixed number of times. Requires:
+   - `fireAndForgetRunner`: The implementation that handles state persistence
+   - `name`: A unique identifier for this flag
+   - `counter`: Number of times to execute before disabling
+
+3. **FireAndForgetRunner** (core/src/commonMain/kotlin/com/alorma/fireandforget/FireAndForgetRunner.kt:3) - Abstract class defining the persistence contract:
    - `isEnabled()`: Check if the flag should execute
    - `disable()`: Mark the flag as executed
    - `reset()`: Reset the flag to allow re-execution
+   - `isEnabledCounter()`: Check and decrement counter for `CounterFireAndForget`
+   - `getCounter()` / `setCounter()`: Counter persistence methods
+   - `resetCounter()`: Reset counter to initial value
 
 ### Implementation Pattern
 
 To use FireAndForget, you must:
-1. Create a concrete implementation of `FireAndForget` with your specific runner
-2. Pass the runner instance, unique name, and optional default value
+1. Create a concrete implementation of `FireAndForget` (or `CounterFireAndForget`) with your specific runner
+2. Pass the runner instance, unique name, and optional default value (or counter for `CounterFireAndForget`)
 3. Call `isEnabled()` to check if code should execute
 4. Call `disable()` after execution (or have your runner handle this automatically)
 
 Example from the codebase (samples/shared):
 - `SettingsFireAndForgetRunner` uses the multiplatform-settings library to persist state across app restarts
 - `InMemoryFireAndForgetRunner` stores state in memory only (lost on app restart)
+- Both support regular `FireAndForget` and `CounterFireAndForget` implementations
 
 ### Platform Targets
 
@@ -147,3 +156,5 @@ Dependencies are managed via Gradle version catalogs (gradle/libs.versions.toml)
 - State persistence is delegated to the runner, allowing different strategies (in-memory, shared preferences, data store, etc.)
 - The `name` parameter is critical - it's used as the key for persisting state
 - Each `FireAndForget` instance represents a unique flag/feature
+- `CounterFireAndForget` extends `FireAndForget` to support counter-based execution limiting
+- Counter state persists across app restarts when using persistent runners like `SettingsFireAndForgetRunner`

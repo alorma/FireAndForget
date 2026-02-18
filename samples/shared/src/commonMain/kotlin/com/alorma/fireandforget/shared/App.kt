@@ -25,6 +25,7 @@ fun App() {
 
     val fireOne = FireOne(runner)
     val fireTwo = FireTwo(runner)
+    val fireMultiple = FireMultiple(runner, counter = 3)
 
     Scaffold(
       modifier = Modifier.fillMaxSize(),
@@ -35,6 +36,7 @@ fun App() {
       ) {
         FireAndForgetSampleRow(fireOne)
         FireAndForgetSampleRow(fireTwo)
+        FireAndForgetSampleRow(fireMultiple)
       }
     }
   }

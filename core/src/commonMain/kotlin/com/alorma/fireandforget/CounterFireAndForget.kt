@@ -1,6 +1,6 @@
 package com.alorma.fireandforget
 
-open class FireAndForgetMultiple(
+open class CounterFireAndForget(
   fireAndForgetRunner: FireAndForgetRunner,
   name: String,
   val counter: Int,
@@ -11,7 +11,7 @@ open class FireAndForgetMultiple(
   autoDisable = false,
 ) {
   override fun isEnabled(): Boolean {
-    return fireAndForgetRunner.isEnabledMultiple(this)
+    return fireAndForgetRunner.isEnabledCounter(this)
   }
 
   override fun reset() {

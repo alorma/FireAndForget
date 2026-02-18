@@ -9,13 +9,13 @@ abstract class FireAndForgetRunner {
     return enabled
   }
 
-  fun isEnabledMultiple(fireAndForgetMultiple: FireAndForgetMultiple): Boolean {
-    val currentCounter = getCounter(fireAndForgetMultiple)
+  fun isEnabledCounter(counterFireAndForget: CounterFireAndForget): Boolean {
+    val currentCounter = getCounter(counterFireAndForget)
     
     // Initialize counter if not set
     val counter = if (currentCounter == null) {
-      setCounter(fireAndForgetMultiple, fireAndForgetMultiple.counter)
-      fireAndForgetMultiple.counter
+      setCounter(counterFireAndForget, counterFireAndForget.counter)
+      counterFireAndForget.counter
     } else {
       currentCounter
     }
@@ -27,7 +27,7 @@ abstract class FireAndForgetRunner {
     
     // Decrement counter
     val newCounter = counter - 1
-    setCounter(fireAndForgetMultiple, newCounter)
+    setCounter(counterFireAndForget, newCounter)
     
     // Return true because we had at least one call left
     return true
@@ -37,10 +37,10 @@ abstract class FireAndForgetRunner {
   abstract fun disable(fireAndForget: FireAndForget)
   abstract fun reset(fireAndForget: FireAndForget)
   
-  protected abstract fun getCounter(fireAndForgetMultiple: FireAndForgetMultiple): Int?
-  protected abstract fun setCounter(fireAndForgetMultiple: FireAndForgetMultiple, value: Int)
+  protected abstract fun getCounter(counterFireAndForget: CounterFireAndForget): Int?
+  protected abstract fun setCounter(counterFireAndForget: CounterFireAndForget, value: Int)
   
-  fun resetCounter(fireAndForgetMultiple: FireAndForgetMultiple) {
-    setCounter(fireAndForgetMultiple, fireAndForgetMultiple.counter)
+  fun resetCounter(counterFireAndForget: CounterFireAndForget) {
+    setCounter(counterFireAndForget, counterFireAndForget.counter)
   }
 }

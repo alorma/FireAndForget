@@ -1,7 +1,7 @@
 package com.alorma.fireandforget.shared
 
+import com.alorma.fireandforget.CounterFireAndForget
 import com.alorma.fireandforget.FireAndForget
-import com.alorma.fireandforget.FireAndForgetMultiple
 import com.alorma.fireandforget.FireAndForgetRunner
 
 class InMemoryFireAndForgetRunner: FireAndForgetRunner() {
@@ -21,11 +21,11 @@ class InMemoryFireAndForgetRunner: FireAndForgetRunner() {
     map.remove(fireAndForget.name)
   }
 
-  override fun getCounter(fireAndForgetMultiple: FireAndForgetMultiple): Int? {
-    return counterMap[fireAndForgetMultiple.name]
+  override fun getCounter(counterFireAndForget: CounterFireAndForget): Int? {
+    return counterMap[counterFireAndForget.name]
   }
 
-  override fun setCounter(fireAndForgetMultiple: FireAndForgetMultiple, value: Int) {
-    counterMap[fireAndForgetMultiple.name] = value
+  override fun setCounter(counterFireAndForget: CounterFireAndForget, value: Int) {
+    counterMap[counterFireAndForget.name] = value
   }
 }

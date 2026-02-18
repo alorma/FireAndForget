@@ -1,7 +1,7 @@
 package com.alorma.fireandforget.multiplatform.settings
 
+import com.alorma.fireandforget.CounterFireAndForget
 import com.alorma.fireandforget.FireAndForget
-import com.alorma.fireandforget.FireAndForgetMultiple
 import com.alorma.fireandforget.FireAndForgetRunner
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
@@ -25,8 +25,8 @@ class SettingsFireAndForgetRunner(
     settings.remove(buildKey(fireAndForget))
   }
 
-  override fun getCounter(fireAndForgetMultiple: FireAndForgetMultiple): Int? {
-    val key = buildCounterKey(fireAndForgetMultiple)
+  override fun getCounter(counterFireAndForget: CounterFireAndForget): Int? {
+    val key = buildCounterKey(counterFireAndForget)
     return if (settings.hasKey(key)) {
       settings.getInt(key, 0)
     } else {
@@ -34,15 +34,15 @@ class SettingsFireAndForgetRunner(
     }
   }
 
-  override fun setCounter(fireAndForgetMultiple: FireAndForgetMultiple, value: Int) {
-    settings[buildCounterKey(fireAndForgetMultiple)] = value
+  override fun setCounter(counterFireAndForget: CounterFireAndForget, value: Int) {
+    settings[buildCounterKey(counterFireAndForget)] = value
   }
 
   private fun buildKey(fireAndForget: FireAndForget): String {
     return "fire-and-forget-${fireAndForget.name}"
   }
 
-  private fun buildCounterKey(fireAndForgetMultiple: FireAndForgetMultiple): String {
-    return "fire-and-forget-counter-${fireAndForgetMultiple.name}"
+  private fun buildCounterKey(counterFireAndForget: CounterFireAndForget): String {
+    return "fire-and-forget-counter-${counterFireAndForget.name}"
   }
 }

@@ -39,4 +39,8 @@ abstract class FireAndForgetRunner {
   
   protected abstract fun getCounter(fireAndForgetMultiple: FireAndForgetMultiple): Int?
   protected abstract fun setCounter(fireAndForgetMultiple: FireAndForgetMultiple, value: Int)
+  
+  fun resetCounter(fireAndForgetMultiple: FireAndForgetMultiple) {
+    setCounter(fireAndForgetMultiple, fireAndForgetMultiple.counter)
+  }
 }

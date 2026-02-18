@@ -13,4 +13,8 @@ open class FireAndForgetMultiple(
   override fun isEnabled(): Boolean {
     return fireAndForgetRunner.isEnabledMultiple(this)
   }
+
+  override fun reset() {
+    fireAndForgetRunner.resetCounter(this)
+  }
 }

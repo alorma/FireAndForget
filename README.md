@@ -480,6 +480,72 @@ fun showScreen() {
 - 🎁 Trial features with usage limits
 - 🔔 Reminder messages (show N times before stopping)
 
+#### Inverse Pattern: Show AFTER N Times
+
+To show a feature only AFTER it's been accessed N times (inverse logic), use `!isEnabled()`:
+
+```kotlin
+class ShowAfterVisits(runner: FireAndForgetRunner, visits: Int = 3) : CounterFireAndForget(
+  fireAndForgetRunner = runner,
+  name = "show_after_visits",
+  counter = visits
+)
+
+fun showScreen() {
+  val runner = SettingsFireAndForgetRunner(Settings())
+  val showAfterVisits = ShowAfterVisits(runner, visits = 3)
+
+  // Track visits silently - returns true for first 3 visits, false after
+  val stillCounting = showAfterVisits.isEnabled()
+  
+  // Show feature ONLY after counter reaches 0 (inverse logic)
+  if (!stillCounting) {
+    showAdvancedFeature("You've visited 3 times! Here's an advanced feature.")
+  }
+  
+  // Visit 1: stillCounting = true  → feature NOT shown
+  // Visit 2: stillCounting = true  → feature NOT shown  
+  // Visit 3: stillCounting = true  → feature NOT shown
+  // Visit 4+: stillCounting = false → feature SHOWN
+}
+```
+
+**Alternative: Track and Show Once After N Visits**
+
+```kotlin
+class UnlockAfterUses(runner: FireAndForgetRunner, requiredUses: Int = 3) : CounterFireAndForget(
+  fireAndForgetRunner = runner,
+  name = "unlock_tracker",
+  counter = requiredUses
+)
+
+class FeatureUnlocked(runner: FireAndForgetRunner) : FireAndForget(
+  fireAndForgetRunner = runner,
+  name = "feature_unlocked",
+  autoDisable = true  // Show once, then auto-disable
+)
+
+fun showScreen() {
+  val runner = SettingsFireAndForgetRunner(Settings())
+  val unlockTracker = UnlockAfterUses(runner, requiredUses = 3)
+  val featureUnlocked = FeatureUnlocked(runner)
+  
+  // Track usage silently
+  val stillTracking = unlockTracker.isEnabled()
+  
+  // Show unlock message once when counter reaches 0
+  if (!stillTracking && featureUnlocked.isEnabled()) {
+    showUnlockMessage("🎉 Premium feature unlocked after 3 uses!")
+  }
+}
+```
+
+**Perfect for:**
+- 🎓 Unlock features after N uses (gamification)
+- ⭐ Show rating prompt after user has used app N times
+- 🎁 Reward users after N sessions
+- 💡 Progressive feature discovery (reveal after engagement)
+
 ## Project Structure
 
 This repository contains:

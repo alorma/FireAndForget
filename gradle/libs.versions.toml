@@ -3,7 +3,7 @@
 namespace = "com.alorma.fireandforget"
 
 # Android Gradle Plugin
-agp = "9.0.1"
+agp = "9.1.0"
 
 # Android SDK
 android-minSdk = "21"

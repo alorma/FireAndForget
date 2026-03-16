@@ -22,7 +22,7 @@ composeMultiplatform = "1.10.2"
 composeMultiplatformMaterial3 = "1.10.0+dev3105"
 
 # AndroidX
-androidx-activity = "1.12.4"
+androidx-activity = "1.13.0"
 
 # Multiplatform Settings
 multiplatform-settings = "1.3.0"

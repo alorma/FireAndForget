@@ -3,22 +3,22 @@
 namespace = "com.alorma.fireandforget"
 
 # Android Gradle Plugin
-agp = "9.1.0"
+agp = "9.4.1"
 
 # Android SDK
 android-minSdk = "21"
 android-minSdkSample = "34"
-android-compileSdk = "36"
+android-compileSdk = "37"
 android-targetSdk = "36"
 
 # Publishing
 mavenPlugin = "0.36.0"
 
 # Kotlin
-kotlin = "2.4.0"
+kotlin = "2.4.20"
 
 # Compose Multiplatform
-composeMultiplatform = "1.10.2"
+composeMultiplatform = "1.12.1"
 composeMultiplatformMaterial3 = "1.10.0+dev3105"
 
 # AndroidX

@@ -15,7 +15,7 @@ android-targetSdk = "36"
 mavenPlugin = "0.37.0"
 
 # Kotlin
-kotlin = "2.4.20"
+kotlin = "2.4.21"
 
 # Compose Multiplatform
 composeMultiplatform = "1.12.1"

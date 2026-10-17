@@ -1,0 +1,16 @@
+# FireAndForget
+
+> Kotlin Multiplatform library to run code once (or N times) with pluggable persistence: onboarding, announcements, tutorials. Targets Android, iOS, Desktop (JVM), JS and WasmJS. Maven group: `com.github.alorma.fire-and-forget`.
+
+## Using the library
+
+- [Agent instructions](https://raw.githubusercontent.com/alorma/FireAndForget/main/docs/AGENT_INSTRUCTIONS.md): dependencies, API, runners, examples, common mistakes. Start here.
+- [README](https://raw.githubusercontent.com/alorma/FireAndForget/main/README.md): longer examples.
+
+## Working on the library itself
+
+- [AGENTS.md](https://raw.githubusercontent.com/alorma/FireAndForget/main/AGENTS.md): architecture, build commands, conventions.
+
+## Optional
+
+- [Sample code](https://github.com/alorma/FireAndForget/tree/main/samples/shared/src/commonMain/kotlin/com/alorma/fireandforget/shared): compilable usage, including an in-memory runner.

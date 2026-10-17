@@ -37,6 +37,12 @@ FireAndForget is a simple yet powerful utility for managing one-time operations 
 - 📱 **Use Anywhere**: Kotlin Multiplatform projects or native platform-specific code (Android, iOS, JVM, JS)
 - 🏃 **Runner Pattern**: Delegates state persistence to customizable runner implementations
 
+## For AI agents
+
+Using an AI coding agent (Claude, Codex, Copilot, ...) to integrate this library? Point it to
+[docs/AGENT_INSTRUCTIONS.md](docs/AGENT_INSTRUCTIONS.md) (also indexed in [llms.txt](llms.txt)).
+Contributors' agents should read [AGENTS.md](AGENTS.md).
+
 ## Installation
 
 ### Kotlin Multiplatform
@@ -48,10 +54,10 @@ kotlin {
   sourceSets {
     commonMain.dependencies {
       // Core library - required
-      implementation("com.alorma.fireandforget:core:$version")
+      implementation("com.github.alorma.fire-and-forget:core:$version")
 
       // Optional: multiplatform-settings implementation
-      implementation("com.alorma.fireandforget:multiplatform-settings:$version")
+      implementation("com.github.alorma.fire-and-forget:multiplatform-settings:$version")
     }
   }
 }
@@ -64,10 +70,10 @@ Add the dependency to your app's `build.gradle.kts`:
 ```kotlin
 dependencies {
   // Core library - required
-  implementation("com.alorma.fireandforget:core:$version")
+  implementation("com.github.alorma.fire-and-forget:core:$version")
 
   // Optional: multiplatform-settings implementation
-  implementation("com.alorma.fireandforget:multiplatform-settings:$version")
+  implementation("com.github.alorma.fire-and-forget:multiplatform-settings:$version")
 }
 ```
 
@@ -79,12 +85,12 @@ The library can be consumed as a Kotlin/Native framework in your iOS project. Ad
 
 ```kotlin
 dependencies {
-  implementation("com.alorma.fireandforget:core:$version")
-  implementation("com.alorma.fireandforget:multiplatform-settings:$version")
+  implementation("com.github.alorma.fire-and-forget:core:$version")
+  implementation("com.github.alorma.fire-and-forget:multiplatform-settings:$version")
 }
 ```
 
-Check the latest version on [Maven Central](https://central.sonatype.com/namespace/com.alorma.fireandforget).
+Check the latest version on [Maven Central](https://central.sonatype.com/namespace/com.github.alorma.fire-and-forget).
 
 ## Architecture
 
@@ -92,12 +98,12 @@ FireAndForget uses a **Runner Pattern** that separates the flag logic from state
 
 ### Core Components
 
-1. **FireAndForget** (Abstract Class)
+1. **FireAndForget** (Open Class)
    - Represents a one-time flag with a unique name
    - Requires a `FireAndForgetRunner` implementation for state persistence
    - Each instance needs a unique `name` to identify its state
 
-2. **CounterFireAndForget** (Abstract Class, extends FireAndForget)
+2. **CounterFireAndForget** (Open Class, extends FireAndForget)
    - Executes code a fixed number of times before disabling
    - Accepts a `counter` parameter for the number of allowed executions
    - Counter decrements on each `isEnabled()` call
@@ -120,7 +126,7 @@ This pattern allows you to choose or create your own state persistence strategy.
 
 ### Step 1: Create a Concrete Implementation
 
-First, create a concrete class that extends `FireAndForget`:
+First, create a class that extends `FireAndForget` (or just instantiate it directly):
 
 ```kotlin
 class OnboardingFlag(
@@ -239,7 +245,7 @@ fun showAppContent() {
 ### FireAndForget Class
 
 ```kotlin
-abstract class FireAndForget(
+open class FireAndForget(
   val fireAndForgetRunner: FireAndForgetRunner,
   val name: String,
   val defaultValue: Boolean = true,
@@ -263,7 +269,7 @@ abstract class FireAndForget(
 ### CounterFireAndForget Class
 
 ```kotlin
-abstract class CounterFireAndForget(
+open class CounterFireAndForget(
   fireAndForgetRunner: FireAndForgetRunner,
   name: String,
   val counter: Int,

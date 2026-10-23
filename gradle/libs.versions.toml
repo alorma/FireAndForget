@@ -18,7 +18,7 @@ mavenPlugin = "0.37.0"
 kotlin = "2.4.20"
 
 # Compose Multiplatform
-composeMultiplatform = "1.12.1"
+composeMultiplatform = "1.12.2"
 composeMultiplatformMaterial3 = "1.10.0+dev3105"
 
 # AndroidX

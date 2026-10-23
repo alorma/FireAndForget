@@ -43,7 +43,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Build
@@ -61,7 +61,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Build
@@ -84,7 +84,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Build sample ${{ matrix.config.target }} - Main
@@ -103,7 +103,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Check signature - Main
@@ -124,7 +124,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Publish to MavenLocal
@@ -145,7 +145,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Publish to MavenCentral (dry)

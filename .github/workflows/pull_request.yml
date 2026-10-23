@@ -42,9 +42,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Build
@@ -60,9 +60,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Build
@@ -83,9 +83,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Build sample ${{ matrix.config.target }} - PR
@@ -102,9 +102,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Check signature - PR
@@ -123,9 +123,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Publish to MavenLocal
@@ -144,9 +144,9 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
 
       - name: Publish to MavenCentral (dry)

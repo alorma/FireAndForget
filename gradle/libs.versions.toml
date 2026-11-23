@@ -19,7 +19,7 @@ kotlin = "2.4.21"
 
 # Compose Multiplatform
 composeMultiplatform = "1.12.2"
-composeMultiplatformMaterial3 = "1.10.0+dev3105"
+composeMultiplatformMaterial3 = "1.12.0-alpha03"
 
 # AndroidX
 androidx-activity = "1.13.0"

@@ -48,7 +48,11 @@ class FireAndForgetLibraryConventionPlugin : Plugin<Project> {
           // Default namespace - modules MUST override this with their unique namespace
           namespace = defaultNamespace
 
-          compileSdk = libs.findVersion("android-compileSdk").get().toString().toInt()
+          compileSdk {
+            version = release(libs.findVersion("android-compileSdk").get().toString().toInt()) {
+              minorApiLevel = libs.findVersion("android-compileSdkMinor").get().toString().toInt()
+            }
+          }
           minSdk = libs.findVersion("android-minSdk").get().toString().toInt()
 
           packaging {

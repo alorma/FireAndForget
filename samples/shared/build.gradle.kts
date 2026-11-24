@@ -10,7 +10,12 @@ kotlin {
   androidLibrary {
     namespace = libs.versions.namespace.get() + ".shared"
     minSdk = libs.versions.android.minSdkSample.get().toInt()
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk {
+      version =
+        release(libs.versions.android.compileSdk.get().toInt()) {
+          minorApiLevel = libs.versions.android.compileSdkMinor.get().toInt()
+        }
+    }
   }
 
   jvm()
